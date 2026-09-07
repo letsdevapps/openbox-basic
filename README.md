@@ -105,3 +105,27 @@ Rofi = lançador/menu
 feh = wallpaper/imagens
 Picom = efeitos visuais/composição
 
+## Uninstall
+
+O processo de desinstalação teve alguns passos a mais do que o esperado. Durante a troca do gerenciador de janelas entre GNOME, XFCE e OpenBox. A variável "display-manager" perdeu o symbolic link para o GDM3.
+
+O Sistema fez o reboot em TTY3 pois estava sem configurações padrão.
+Verificar se nada referente ao GNOME display foi desinstalado.
+    
+    sudo apt-get install ubuntu-desktop gnome-shell gdm3    
+
+    sudo systemctl start gdm3
+
+O Sistema mudou automaticamente para o TTY7, ali precisei atribuir o valor referente ao GDM3 manualmente para voltar ao normal:
+
+    sudo systemctl enable gdm3
+    sudo systemctl get-default
+    sudo systemctl set-default graphical.target
+    sudo systemctl enable display-manager
+    sudo rm -f /etc/systemd/system/display-manager.service
+    sudo ln -s /lib/systemd/system/gdm3.service /etc/systemd/system/display-manager.service
+    sudo systemctl daemon-reload
+    sudo systemctl set-default graphical.target
+    sudo ls -l /etc/systemd/system/display-manager.service
+    sudo systemctl start display-manager
+
